@@ -8,3 +8,5 @@
  */
 
 rootProject.name = 'java-libp2p'
+include 'core'
+
