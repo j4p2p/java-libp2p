@@ -39,6 +39,7 @@ public class NodeTest {
         List<Peer> peersOfJoy = joy.peers();
 
         assertEquals(1, peersOfJoy.size());
-        assertEquals(Peer.of(alis.host(), alis.port()), peersOfJoy.get(0));
+        assertEquals(alis.host(), peersOfJoy.get(0).host());
+        assertEquals(alis.outputPort(), peersOfJoy.get(0).port());
     }
 }
