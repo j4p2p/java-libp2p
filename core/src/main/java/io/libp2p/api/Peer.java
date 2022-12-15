@@ -1,13 +1,14 @@
 package io.libp2p.api;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import io.libp2p.api.impl.PeerImpl;
 
 public interface Peer {
 
     static Peer of(String host, int port) {
-        throw new NotImplementedException();
+        return new PeerImpl(host, port);
     }
 
     String host();
+
     int port();
 }
