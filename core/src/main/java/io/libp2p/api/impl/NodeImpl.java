@@ -13,8 +13,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -22,7 +21,7 @@ public class NodeImpl implements Node {
     private final String host = "127.0.0.1";
     private final int port;
     private Status nodeStatus = Status.STOPPED;
-    private final List<Peer> peers = new ArrayList<>();
+    private final Map<String, Peer> peers = new HashMap<>();
 
     private final Executor executor = Executors.newFixedThreadPool(2);
     EventLoopGroup bossGroup;
@@ -50,12 +49,14 @@ public class NodeImpl implements Node {
                         public void initChannel(SocketChannel ch) {
                             String hostname = ch.remoteAddress().getHostName();
 
-                            peers.add(new PeerImpl(
-                                            hostname.equals("localhost") ? "127.0.0.1" : hostname,
-                                            ch.remoteAddress().getPort()
-                                    )
-                            );
+                            String name = hostname.equals("localhost")
+                                    ? "127.0.0.1"
+                                    : hostname;
 
+                            peers.put(host, new PeerImpl(
+                                    name,
+                                    ch.remoteAddress().getPort())
+                            );
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
@@ -94,7 +95,7 @@ public class NodeImpl implements Node {
     }
 
     @Override
-    public List<Peer> peers() {
+    public Map<String, Peer> peers() {
         return peers;
     }
 
@@ -116,7 +117,7 @@ public class NodeImpl implements Node {
 
             clientChannel = bootstrap.connect(host, port).sync().channel();
 
-            peers.add(new PeerImpl(host, port));
+            peers.put(host, new PeerImpl(host, port));
 
             Thread.sleep(1000);
         } catch (InterruptedException e) {
