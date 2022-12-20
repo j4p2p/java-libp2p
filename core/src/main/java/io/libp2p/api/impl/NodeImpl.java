@@ -1,6 +1,5 @@
 package io.libp2p.api.impl;
 
-import io.libp2p.DiscardServerHandler;
 import io.libp2p.api.Node;
 import io.libp2p.api.Peer;
 import io.netty.bootstrap.Bootstrap;
@@ -57,7 +56,6 @@ public class NodeImpl implements Node {
                                     )
                             );
 
-                            ch.pipeline().addLast(new DiscardServerHandler()); // Handler обработчик сигнала
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
@@ -113,7 +111,6 @@ public class NodeImpl implements Node {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new DiscardServerHandler()); // Handler обработчик сигнала
                         }
                     });
 
