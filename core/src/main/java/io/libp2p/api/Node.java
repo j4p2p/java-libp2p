@@ -3,6 +3,8 @@ package io.libp2p.api;
 import io.libp2p.api.impl.NodeImpl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface Node {
 
@@ -20,7 +22,7 @@ public interface Node {
 
     Status status();
 
-    List<Peer> peers();
+    Map<String, Peer> peers();
 
     void connect(String host, int port);
 

